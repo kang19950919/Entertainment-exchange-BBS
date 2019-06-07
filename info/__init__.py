@@ -15,6 +15,9 @@ from config import config
 # db.init_app(app)
 db = SQLAlchemy()
 
+# 指定redis_store的类型
+redis_store = None  # type: StrictRedis
+
 
 def set_log(config_name):
     # 通过不同的人配置创建出不同日志记录
@@ -42,6 +45,7 @@ def create_app(config_name):
     db.init_app(app)
 
     # 三、集成redis  可以吧容易产生变化的值放入到配置中
+    global redis_store
     redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT)
 
     # 四、CSRFProtect, 只起到保护的作用，具体往表单和cookie中设置csrf_token还需要我们自己去做
@@ -50,5 +54,10 @@ def create_app(config_name):
     # 集成flask-session
     # 说明: flask中的session是保存用户数据的容器（上下文），而flask_session中的Session是指定session的保存路径
     Session(app)
+
+    # 注册蓝图
+    # 对于只导入一次的，什么时候调用什么时候导入，防止循环导入
+    from info.modules.index import index_blu
+    app.register_blueprint(index_blu)
 
     return app
