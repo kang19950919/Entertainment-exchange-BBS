@@ -1,8 +1,7 @@
-from info import redis_store
 from info.modules.index import index_blu
+from flask import render_template
 
 
 @index_blu.route("/")
 def index():
-    redis_store.set("height", "180")
-    return "Hello World"
+    return render_template("news/index.html")
