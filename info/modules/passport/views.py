@@ -47,6 +47,9 @@ def login():
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
 
+    if not user:
+        return jsonify(errno=RET.NODATA, errmsg="用户没有注册")
+
     if not user.check_password(password):
         return jsonify(errno=RET.DATAERR, errmsg="密码错误")
 
