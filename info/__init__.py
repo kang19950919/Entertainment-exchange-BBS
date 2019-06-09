@@ -9,7 +9,6 @@ from flask_wtf import CSRFProtect
 from flask_session import Session
 from config import config
 
-
 # db = SQLAlchemy(app) 拆分成2步
 # db = SQLAlchemy()
 # db.init_app(app)
@@ -46,7 +45,8 @@ def create_app(config_name):
 
     # 三、集成redis  可以吧容易产生变化的值放入到配置中
     global redis_store
-    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT, decode_responses=True)
+    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT,
+                              decode_responses=True)
 
     # 四、CSRFProtect, 只起到保护的作用，具体往表单和cookie中设置csrf_token还需要我们自己去做
     # CSRFProtect(app) // 为了代码测试
