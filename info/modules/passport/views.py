@@ -61,6 +61,8 @@ def login():
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
 
+    # 依赖cookie
+    # 本身是一个临时容器，应用上下文
     session["user_id"] = user.id
 
     return jsonify(errno=RET.OK, errmsg="登陆成功")
