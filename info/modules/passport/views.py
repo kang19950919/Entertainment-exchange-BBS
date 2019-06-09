@@ -107,7 +107,7 @@ def get_sms_code():
 
     # 判断验证码是否一致
     try:
-        real_image_code = redis_store.get("ImageCodeId" + image_code_id)
+        real_image_code = redis_store.get("ImageCodeId_" + image_code_id)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
@@ -123,9 +123,9 @@ def get_sms_code():
     sms_code_str = "%06d" % random.randint(0, 999999)
     current_app.logger.info("短信验证码为%s" % sms_code_str)
 
-    result = CCP().send_template_sms('17600823404', [sms_code_str, constants.IMAGE_CODE_REDIS_EXPIRES / 5], 1)
-    if result != 0:
-        return jsonify(errno=RET.THIRDERR, errmsg="验证码发送错误")
+    # result = CCP().send_template_sms('17600823404', [sms_code_str, constants.IMAGE_CODE_REDIS_EXPIRES / 5], 1)
+    # if result != 0:
+    #     return jsonify(errno=RET.THIRDERR, errmsg="验证码发送错误")
 
     # 将sms_code写入redis数据库
     try:

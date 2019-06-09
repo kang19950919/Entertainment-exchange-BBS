@@ -16,7 +16,8 @@ class Config(object):
     # 指定session的储存方式
     SESSION_TYPE = "redis"
     # 指定储存session的储存对象
-    SESSION_REDIS = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+    SESSION_REDIS = StrictRedis(host=REDIS_HOST, port=REDIS_PORT)
+    # SESSION_REDIS = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     # 设置session签名  加密
     SESSION_USE_SIGNER = True
     # 设置session永久保存
