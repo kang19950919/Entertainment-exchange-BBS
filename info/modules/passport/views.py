@@ -2,6 +2,8 @@ import json
 import random
 
 import re
+from datetime import datetime
+
 from flask import request, abort, current_app, make_response, jsonify, session
 
 from info import redis_store, constants, db
@@ -16,6 +18,49 @@ from werkzeug.security import generate_password_hash
 # 3、参数的名字是什么
 # 4、返回给前端的参数和参数类型是什么
 from info.utils.response_code import RET
+
+
+@passport_blu.route("/login", methods=["POST"])
+def login():
+    """
+    1.接收参数 mobile passport
+    2.验证参数 验证密码
+    3.设置用户登陆状态
+    4.设置用户登录事件last_login
+    5.返回响应
+    :return:
+    """
+    data_dict = request.json
+
+    mobile = data_dict.get("mobile")
+    password = data_dict.get("passport")
+
+    if not all([mobile, password]):
+        return jsonify(errno=RET.PARAMERR, errmsg="参数错误")
+
+    if not re.match(r"1[3579]\d{9}", mobile):
+        return jsonify(errno=RET.PARAMERR, errmsg="手机号不正确")
+
+    try:
+        user = User.query.filter_by(mobile=mobile).first()
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
+
+    if not user.check_password(password):
+        return jsonify(errno=RET.DATAERR, errmsg="密码错误")
+
+    user.last_login = datetime.now()
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
+
+    session["user_id"] = user.id
+
+    return jsonify(errno=RET.OK, errmsg="登陆成功")
 
 
 @passport_blu.route("/register", methods=["POST"])
