@@ -46,7 +46,7 @@ def create_app(config_name):
 
     # 三、集成redis  可以吧容易产生变化的值放入到配置中
     global redis_store
-    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT)
+    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT, decode_responses=True)
 
     # 四、CSRFProtect, 只起到保护的作用，具体往表单和cookie中设置csrf_token还需要我们自己去做
     CSRFProtect(app)
