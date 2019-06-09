@@ -12,6 +12,8 @@ from config import config
 # db = SQLAlchemy(app) 拆分成2步
 # db = SQLAlchemy()
 # db.init_app(app)
+from info.utils.common import do_index_class
+
 db = SQLAlchemy()
 
 # 指定redis_store的类型
@@ -61,6 +63,9 @@ def create_app(config_name):
     # 集成flask-session
     # 说明: flask中的session是保存用户数据的容器（上下文），而flask_session中的Session是指定session的保存路径
     Session(app)
+
+    # 添加过滤器
+    app.add_template_filter(do_index_class, "index_class")
 
     # 注册蓝图
     # 对于只导入一次的，什么时候调用什么时候导入，防止循环导入

@@ -1,3 +1,4 @@
+from info import constants
 from info.models import User, News
 from info.modules.index import index_blu
 from flask import render_template, send_file, redirect, current_app, session
@@ -16,16 +17,26 @@ def index():
         try:
             user = User().query.get(user_id)
         except Exception as e:
-            current_app.logger.errot(e)
+            current_app.logger.error(e)
 
-    # 显示新闻排行
-    click_news = None
-    click_news = News.query.order_by(News.clicks.desc()).limit(10).all()
+    # 1.显示新闻排行
+    click_news = []
+    try:
+        click_news = News.query.order_by(News.clicks.desc()).limit(constants.CLICK_RANK_MAX_NEWS).all()
+    except Exception as e:
+        current_app.logger.error(e)
+
+    # [obj, obj, obj, obj] --> [{}, {}, {}]
+    # click_news_list = []
+    # for news_obj in click_news:
+    #     click_news_dict = news_obj.to_basic_dict()
+    #     click_news_list.append(click_news_dict)
+    click_news_list = [news_obj.to_basic_dict() for news_obj in click_news]
 
     data = {
-        "user_info": user.to_dict() if user else None
+        "user_info": user.to_dict() if user else None,
+        "click_news_list": click_news_list
     }
-    # data.user_info.avatar_url
     return render_template("news/index.html", data=data)
 
 
