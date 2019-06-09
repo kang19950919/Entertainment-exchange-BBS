@@ -1,5 +1,5 @@
 from info import constants
-from info.models import User, News
+from info.models import User, News, Category
 from info.modules.index import index_blu
 from flask import render_template, send_file, redirect, current_app, session
 
@@ -26,16 +26,21 @@ def index():
     except Exception as e:
         current_app.logger.error(e)
 
-    # [obj, obj, obj, obj] --> [{}, {}, {}]
-    # click_news_list = []
-    # for news_obj in click_news:
-    #     click_news_dict = news_obj.to_basic_dict()
-    #     click_news_list.append(click_news_dict)
     click_news_list = [news_obj.to_basic_dict() for news_obj in click_news]
+
+    # 2.显示首页新闻分类
+    category_list = []
+    try:
+        category_list = Category.query.all()
+    except Exception as e:
+        current_app.logger.error(e)
+
+    category_list_dict = [category_obj.to_dict() for category_obj in category_list]
 
     data = {
         "user_info": user.to_dict() if user else None,
-        "click_news_list": click_news_list
+        "click_news_list": click_news_list,
+        "category_list": category_list_dict
     }
     return render_template("news/index.html", data=data)
 
