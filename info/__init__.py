@@ -49,7 +49,7 @@ def create_app(config_name):
     redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT, decode_responses=True)
 
     # 四、CSRFProtect, 只起到保护的作用，具体往表单和cookie中设置csrf_token还需要我们自己去做
-    CSRFProtect(app)
+    # CSRFProtect(app) // 为了代码测试
 
     # 集成flask-session
     # 说明: flask中的session是保存用户数据的容器（上下文），而flask_session中的Session是指定session的保存路径

@@ -183,7 +183,49 @@ function sendSMSCode() {
         return;
     }
 
+    var params = {
+        "mobile": mobile,
+        "image_code":imageCode,
+        "image_code_id": imageCodeId
+    }
     // TODO 发送短信验证码
+    $.ajax({
+        url: "/passport/sms_code",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify(params),
+        success: function (response) {
+            if (response.errno == "0"){
+                // 发送短信验证码
+                // 涉及倒计时
+                var num = 60
+                var t = setInterval(function () {
+                    if (num == 1)
+                    {
+                        // 倒计时结束
+                        // 清空待机时
+                        clearInterval(t)
+                        // 重新设置标签内容
+                        $(".get_code").html("点击获取验证码")
+                        // 还原点击事件
+                        $(".get_code").attr("onclick", "sendSMSCode();");
+                    }
+                    else
+                    {
+                        num -= 1
+                        $(".get_code").html(num + "秒")
+                    }
+                }, 1000)
+            }
+            else {
+                $("#register-image-code-err").html(response.errmsg)
+                $("#register-image-code-err").show()
+                $(".get_code").attr("onclick", "sendSMSCode();");
+
+            }
+        }
+
+    })
 }
 
 // 调用该函数模拟点击左侧按钮

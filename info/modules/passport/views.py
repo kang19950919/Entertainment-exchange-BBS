@@ -32,6 +32,8 @@ def get_sms_code():
     # json_data = request.data
     # dict_data = json.loads(json_data)
 
+    return jsonify(errno=RET.OK, errmsg="OK")
+
     dict_data = request.json
 
     mobile = dict_data.get("mobile")
@@ -109,6 +111,7 @@ def get_image_code():
 
     # 3、生成验证码 captcha
     _, text, image = captcha.generate_captcha()
+    current_app.logger.info("图片验证码为%s" % text)
 
     # 4、把随机字符串和生成的文本验证码以key, value的形式保存到redis
     try:
