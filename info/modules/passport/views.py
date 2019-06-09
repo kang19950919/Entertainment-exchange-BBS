@@ -46,7 +46,7 @@ def register():
 
     # 验证短信验证码
     try:
-        real_sms_code = redis_store.get("sms_"+ mobile)
+        real_sms_code = redis_store.get("sms_" + mobile)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="数据库查询失败")
@@ -90,9 +90,6 @@ def get_sms_code():
     # 接受的数据是json格式的字符串要转化成字典格式
     # json_data = request.data
     # dict_data = json.loads(json_data)
-
-    return jsonify(errno=RET.OK, errmsg="OK")
-
     dict_data = request.json
 
     mobile = dict_data.get("mobile")
@@ -132,7 +129,7 @@ def get_sms_code():
 
     # 将sms_code写入redis数据库
     try:
-        redis_store.setex("sms_"+ mobile, constants.IMAGE_CODE_REDIS_EXPIRES, sms_code_str)
+        redis_store.setex("sms_" + mobile, constants.IMAGE_CODE_REDIS_EXPIRES, sms_code_str)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg="手机验证码保存失败")
