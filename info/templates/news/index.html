@@ -25,8 +25,8 @@
                 <!-- 用户登录后显示下面，隐藏上面 -->
                 <div class="user_login fr">
                     <img src="{% if data.user_info.avatar_url %}{{ data.user_info.avatar_url }}{% else %}../../static/news/images/person01.png{% endif %}" class="lgin_pic">
-                    <a href="#">用户张三</a>
-                    <a href="#">退出</a>
+                    <a href="#">{{ data.user_info.nick_name }}</a>
+                    <a href="javascript:;" onclick="logout()">退出</a>
                 </div>
             {% else %}
                 <div class="user_btns fr">

@@ -20,6 +20,17 @@ from werkzeug.security import generate_password_hash
 from info.utils.response_code import RET
 
 
+@passport_blu.route("/logout", methods=["GET"])
+def logout():
+    """
+    直接删除session
+    :return:
+    """
+    session.pop("user_id", None)
+
+    return jsonify(errno=RET.OK, errmsg="退出成功")
+
+
 @passport_blu.route("/login", methods=["POST"])
 def login():
     """
