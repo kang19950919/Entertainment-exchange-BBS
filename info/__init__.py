@@ -5,7 +5,7 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from redis import StrictRedis
-from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
 from config import config
 
@@ -49,7 +49,14 @@ def create_app(config_name):
                               decode_responses=True)
 
     # 四、CSRFProtect, 只起到保护的作用，具体往表单和cookie中设置csrf_token还需要我们自己去做
-    # CSRFProtect(app) // 为了代码测试
+    # 1、先往cookie中添加一个csrf_token
+    # 2、往表单中去设置， 现在我们有表单吗？如何在ajax中去设置一个csrf_token
+    @app.after_request
+    def after_request(response):
+        csrf_token = generate_csrf()
+        response.set_cookie("csrf_token", csrf_token)
+        return response
+    CSRFProtect(app)
 
     # 集成flask-session
     # 说明: flask中的session是保存用户数据的容器（上下文），而flask_session中的Session是指定session的保存路径

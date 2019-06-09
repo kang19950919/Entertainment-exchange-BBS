@@ -1,4 +1,4 @@
-from info.models import User
+from info.models import User, News
 from info.modules.index import index_blu
 from flask import render_template, send_file, redirect, current_app, session
 
@@ -18,12 +18,10 @@ def index():
         except Exception as e:
             current_app.logger.errot(e)
 
-    # data = {
-    #     "user_info": {
-    #         "nice_name": "hsdgjsd",
-    #         "mobile": "23654635"
-    #     }
-    # }
+    # 显示新闻排行
+    click_news = None
+    click_news = News.query.order_by(News.clicks.desc()).limit(10).all()
+
     data = {
         "user_info": user.to_dict() if user else None
     }
