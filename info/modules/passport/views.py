@@ -9,6 +9,7 @@ from info.libs.yuntongxun.sms import CCP
 from info.models import User
 from info.modules.passport import passport_blu
 from info.utils.captcha.captcha import captcha
+from werkzeug.security import generate_password_hash
 
 # 1、请求方式是什么
 # 2、请求的url是什么
@@ -59,7 +60,8 @@ def register():
 
     user = User()
     user.nick_name = "kk" + mobile
-    user.password_hash = password
+    # user.password_hash = generate_password_hash(password)
+    user.password = password
     user.mobile = mobile
 
     try:
