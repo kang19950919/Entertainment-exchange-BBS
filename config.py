@@ -20,8 +20,8 @@ class Config(object):
     # SESSION_REDIS = StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     # 设置session签名  加密
     SESSION_USE_SIGNER = True
-    # 设置session永久保存
-    SESSION_PERMANENT = False
+    # 为False cookie的存活时间为浏览器结束，为True，cookie存活时间和session一样
+    SESSION_PERMANENT = True
     # 设置session保存的时间
     PERMANENT_SESSION_LIFETIME = 86400 * 2
 
