@@ -1,6 +1,6 @@
 import functools
 
-from flask import session, current_app
+from flask import session, current_app, g
 
 
 def do_index_class(index):

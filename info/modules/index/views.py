@@ -1,8 +1,9 @@
 from info import constants
 from info.models import User, News, Category
 from info.modules.index import index_blu
-from flask import render_template, send_file, redirect, current_app, session, request, jsonify
+from flask import render_template, send_file, redirect, current_app, session, request, jsonify, g
 
+from info.utils.common import user_login
 from info.utils.response_code import RET
 
 
@@ -57,19 +58,13 @@ def get_news_list():
 
 
 @index_blu.route("/")
+@user_login
 def index():
     # 需求：首页右上角实现
     # 依赖cookie
     # 第一次访问浏览器和redis数据库都没有cookie信息
     # 浏览器和数据库任何一方保存的session(cookie)消失session.get("user_id")为None
-    user_id = session.get("user_id")  # 第一次为 None
-
-    user = None
-    if user_id:
-        try:
-            user = User().query.get(user_id)
-        except Exception as e:
-            current_app.logger.error(e)
+    user = g.user
 
     # 1.显示新闻排行
     click_news = []
