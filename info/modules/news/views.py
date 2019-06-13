@@ -10,4 +10,5 @@ def detail(news_id):
     :param news_id:
     :return:
     """
-    return render_template("news/detail.html")
+    data = {}
+    return render_template("news/detail.html", data=data)
