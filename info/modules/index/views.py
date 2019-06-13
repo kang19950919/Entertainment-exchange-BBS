@@ -17,7 +17,7 @@ def get_news_list():
     :return:
     """
 
-    cid = request.arg.get("cid")
+    cid = request.args.get("cid")
     page = request.args.get("page", 1)
     per_page = request.args.get("per_page", 10)
 
@@ -30,8 +30,11 @@ def get_news_list():
         current_app.logger.error(e)
         return jsonify(errno=RET.PARAMERR, errmsg="参数错误")
 
+    filters = []
+    if cid != 1:
+        filters.append(News.category_id == cid)
     try:
-        paginate = News.query.filter(News.category_id == cid).order_by(News.create_time.desc()).paginate(page, per_page,
+        paginate = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page, per_page,
                                                                                                          False)
     except Exception as e:
         current_app.logger.error(e)
