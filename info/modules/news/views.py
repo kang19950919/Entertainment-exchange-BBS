@@ -46,6 +46,9 @@ def detail(news_id):
     if not news:
         abort(404)
 
+    # 已经开启自动提交
+    news.clicks += 1
+
     data = {
         "user_info": user.to_dict() if user else None,
         "click_news_list": clicks_news_list,

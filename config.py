@@ -9,6 +9,9 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = "mysql://root:mysql@127.0.0.1:3306/BBS"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
+    # 设置数据库的默认提交
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
     # 给配置类里面自定义了两个类属性
     REDIS_HOST = "127.0.0.1"
     REDIS_PORT = 6379
