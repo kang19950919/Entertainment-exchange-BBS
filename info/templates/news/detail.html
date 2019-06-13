@@ -17,21 +17,26 @@
 
 {% block contentBlock %}
     <div class="detail_con fl">
-            <h3>{{ data.news.title }}</h3>
-            <div class="detail_about clearfix">
-                <span class="time_souce fl">{{ data.news.create_time }} 来源: {{ data.news.source }}</span>
-                <span class="comment fr">{{ data.news.comments_count }}</span>
-            </div>
+        <h3>{{ data.news.title }}</h3>
+        <div class="detail_about clearfix">
+            <span class="time_souce fl">{{ data.news.create_time }} 来源: {{ data.news.source }}</span>
+            <span class="comment fr">{{ data.news.comments_count }}</span>
+        </div>
 
-            <p class="summary">
-                摘要：{{ data.news.digest }}
-            </p>
+        <p class="summary">
+            摘要：{{ data.news.digest }}
+        </p>
 
         {{ data.news.content | safe }}
 
+        {# 如果is_collected = True 要让已收藏显示，收藏隐藏。 反之，收藏显示，已收藏隐藏   #}
+        <a href="javascript:;" class="collected block-center" data-newid="{{ data.news.id }}"
+           style="display: {% if data.is_collected %} block {% else %} none {% endif %};"><span
+                class="out">已收藏</span><span class="over">取消收藏</span></a>
 
-        <a href="javascript:;" class="collection block-center">收藏</a>
-        <a href="javascript:;" class="collected block-center" style="display: none"><span class="out">已收藏</span><span class="over">取消收藏</span></a>
+        <a href="javascript:;" class="collection block-center" data-newid="{{ data.news.id }}"
+           style="display: {% if data.is_collected %} none {% else %} block {% endif %};">收藏</a>
+
 
 
         {% if data.user_info %}
@@ -76,7 +81,7 @@
                 <a href="javascript:;" class="comment_up has_comment_up fr">1</a>
                 <a href="javascript:;" class="comment_reply fr">回复</a>
                 <from class="reply_form fl">
-                    <textarea  class="reply_input"></textarea>
+                    <textarea class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
                     <input type="reset" name="" value="取消" class="reply_cancel fr">
                 </from>
@@ -94,7 +99,7 @@
                 <a href="javascript:;" class="comment_up fr">赞</a>
                 <a href="javascript:;" class="comment_reply fr">回复</a>
                 <from class="reply_form fl">
-                    <textarea  class="reply_input"></textarea>
+                    <textarea class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
                     <input type="reset" name="" value="取消" class="reply_cancel fr">
                 </from>
@@ -112,7 +117,7 @@
                 <a href="javascript:;" class="comment_up fr">赞</a>
                 <a href="javascript:;" class="comment_reply fr">回复</a>
                 <from class="reply_form fl">
-                    <textarea  class="reply_input"></textarea>
+                    <textarea class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
                     <input type="reset" name="" value="取消" class="reply_cancel fr">
                 </from>
@@ -130,7 +135,7 @@
                 <a href="javascript:;" class="comment_up fr">赞</a>
                 <a href="javascript:;" class="comment_reply fr">回复</a>
                 <from class="reply_form fl">
-                    <textarea  class="reply_input"></textarea>
+                    <textarea class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
                     <input type="reset" name="" value="取消" class="reply_cancel fr">
                 </from>
@@ -138,18 +143,18 @@
         </div>
 
 
-        </div>
+    </div>
 {% endblock %}
 
 
 {% block authorBlock %}
     <div class="author_card">
-                <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
-                <a href="#" class="author_name">张大山</a>
-                <div class="author_resume">张大山的简介,张大山</div>
-                <div class="writings"><span>总篇数</span><b>23</b></div>
-                <div class="follows"><span>粉丝</span><b>36</b></div>
-                <a href="javascript:;" class="focus fr">关注</a>
-                <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>
-            </div>
+        <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
+        <a href="#" class="author_name">张大山</a>
+        <div class="author_resume">张大山的简介,张大山</div>
+        <div class="writings"><span>总篇数</span><b>23</b></div>
+        <div class="follows"><span>粉丝</span><b>36</b></div>
+        <a href="javascript:;" class="focus fr">关注</a>
+        <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>
+    </div>
 {% endblock %}
