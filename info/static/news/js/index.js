@@ -41,7 +41,7 @@ $(function () {
         // 页面滚动了多少,这个是随着页面滚动实时变化的
         var nowScroll = $(document).scrollTop();
 
-        if ((canScrollHeight - nowScroll) < 100) {
+        if ((canScrollHeight - nowScroll) < 0.0001) {
             // TODO 判断页数，去更新新闻数据
             // 加载更多是有条件的
             // 1、现在已经加载到最后一页，不在加载
