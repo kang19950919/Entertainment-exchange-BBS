@@ -43,6 +43,19 @@ $(function () {
 
         if ((canScrollHeight - nowScroll) < 100) {
             // TODO 判断页数，去更新新闻数据
+            // 加载更多是有条件的
+            // 1、现在已经加载到最后一页，不在加载
+            // 2、现在正在加载数据，不在加载
+            if (!data_querying){
+                // false 带表不加载数据， true加载数据
+                // 如果data_querying=false我加载数据
+                if (cur_page < total_page){
+                    data_querying = true
+                    cur_page += 1
+                    updateNewsData()
+                }
+            }
+
         }
     })
 })
@@ -66,7 +79,6 @@ function updateNewsData() {
             }
 
             // 添加请求成功之后返回的数据
-
             // 显示数据
             for (var i=0;i<resp.data.news_dict_li.length;i++) {
                 var news = resp.data.news_dict_li[i]
