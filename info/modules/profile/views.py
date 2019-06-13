@@ -16,4 +16,4 @@ def user_info():
         "user": user.to_dict()
     }
 
-    return render_template("news/user.html")
+    return render_template("news/../../static/news/html/../../templates/news/user.html")
