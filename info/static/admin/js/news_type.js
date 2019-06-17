@@ -5,7 +5,9 @@ function getCookie(name) {
 
 $(function(){
     var $a = $('.edit');
-    var $add = $('.addtype');
+    var $add = $('.add_type');
+    var  $input_label = $(".input_label");
+    var $remove = $('.remove_type')
     var $pop = $('.pop_con');
     var $cancel = $('.cancel');
     var $confirm = $('.confirm');
@@ -27,6 +29,14 @@ $(function(){
         $pop.find('h3').html('新增分类');
         $input.val('');
         $pop.show();
+        $input_label.html("分类名称:");
+    });
+    $remove.click(function () {
+        sHandler = 'remove';
+        $pop.find('h3').html('删除分类');
+        $input.val('');
+        $pop.show();
+        $input_label.html("输入分类id:");
     });
 
     $cancel.click(function(){
@@ -54,6 +64,18 @@ $(function(){
                 "name": sVal,
             };
         }
+        else if(sHandler=='remove')
+        {
+            var sId1 = $input.val();
+            if(sVal=='')
+            {
+                $error.html('输入框不能为空').show();
+                return;
+            }
+            params = {
+                "id": sId1
+            };
+        }
         else
         {
             var sVal = $input.val();
@@ -68,6 +90,23 @@ $(function(){
         }
 
         // TODO 发起修改分类请求
+            $.ajax({
+            url:"/admin/news_type",
+            method: "post",
+            headers: {
+                "X-CSRFToken": getCookie("csrf_token")
+            },
+            data: JSON.stringify(params),
+            contentType: "application/json",
+            success: function (resp) {
+                if (resp.errno == "0") {
+                    // 刷新当前界面
+                    location.reload();
+                }else {
+                    $error.html(resp.errmsg).show();
+                }
+            }
+        })
 
     })
 })

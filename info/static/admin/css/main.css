@@ -390,7 +390,7 @@ body{
     color:#fff;
 }
 
-.review,.edit,.addtype{
+.review,.edit,.add_type,.remove_type{
 	display:block;
 	width:40px;
 	line-height:20px;
@@ -400,7 +400,11 @@ body{
 	background:#25c192;
 }
 
-.addtype{
+.add_type{
+	width:100px;
+	line-height:26px;
+}
+.remove_type{
 	width:100px;
 	line-height:26px;
 }

@@ -45,7 +45,7 @@ class User(BaseModel, db.Model):
         ),
         default="MAN")
 
-    # 当前用户收藏的所有新闻
+    # 当前用户收藏的所有新闻（多对多）
     collection_news = db.relationship("News", secondary=tb_user_collection, lazy="dynamic")  # 用户收藏的新闻
     # 用户所有的粉丝，添加了反向引用followed，代表用户都关注了哪些人
     followers = db.relationship('User',
@@ -108,7 +108,7 @@ class News(BaseModel, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("info_user.id"))  # 当前新闻的作者id
     status = db.Column(db.Integer, default=0)  # 当前新闻状态 如果为0代表审核通过，1代表审核中，-1代表审核不通过
     reason = db.Column(db.String(256))  # 未通过原因，status = -1 的时候使用
-    # 当前新闻的所有评论
+    # 当前新闻的所有评论（一对多，一条新闻有多条评论）
     comments = db.relationship("Comment", lazy="dynamic")
 
     def to_review_dict(self):
@@ -159,6 +159,7 @@ class Comment(BaseModel, db.Model):
     news_id = db.Column(db.Integer, db.ForeignKey("info_news.id"), nullable=False)  # 新闻id
     content = db.Column(db.Text, nullable=False)  # 评论内容
     parent_id = db.Column(db.Integer, db.ForeignKey("info_comment.id"))  # 父评论id
+    # 自关联一对多
     parent = db.relationship("Comment", remote_side=[id])  # 自关联
     like_count = db.Column(db.Integer, default=0)  # 点赞条数
 

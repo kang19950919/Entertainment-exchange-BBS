@@ -32,7 +32,7 @@ $(function(){
     });
 
 
-	// 点击输入框，提示文字上移
+	// // 点击输入框，提示文字上移
 	// $('.form_group').on('click focusin',function(){
 	// 	$(this).children('.input_tip').animate({'top':-5,'font-size':12},'fast').siblings('input').focus().parent().addClass('hotline');
 	// })
@@ -46,7 +46,20 @@ $(function(){
 	// 		$(this).siblings('.input_tip').animate({'top':22,'font-size':14},'fast');
 	// 	}
 	// })
-
+        // // 点击输入框，提示文字上移
+    // $('.form_group').on('click focusin',function(){
+    //     $(this).children('.input_tip').animate({'top':-5,'font-size':12},'fast').siblings('input').focus().parent().addClass('hotline');
+    // })
+    //
+    // // 输入框失去焦点，如果输入框为空，则提示文字下移
+    // $('.form_group input').on('blur focusout',function(){
+    //     $(this).parent().removeClass('hotline');
+    //     var val = $(this).val();
+    //     if(val=='')
+    //     {
+    //         $(this).siblings('.input_tip').animate({'top':22,'font-size':14},'fast');
+    //     }
+    // })
     $('.form_group').on('click',function(){
         $(this).children('input').focus()
     })
@@ -55,7 +68,6 @@ $(function(){
         $(this).siblings('.input_tip').animate({'top':-5,'font-size':12},'fast')
         $(this).parent().addClass('hotline');
     })
-
 
 
 
@@ -119,30 +131,27 @@ $(function(){
             $("#login-password-err").show();
             return;
         }
-
         // 发起登录请求
         var params = {
             "mobile": mobile,
-            "passport": password
-        }
+            "password": password
+        };
         $.ajax({
             url: "/passport/login",
             type: "post",
             contentType: "application/json",
-            headers:{
-                "X-CSRFToken": getCookie("csrf_token")
-            },
             data: JSON.stringify(params),
-            success: function (response) {
-                if(response.errno == "0")
+            headers:{
+            "X-CSRFToken": getCookie("csrf_token")
+            },
+            success: function (resp) {
+                if (resp.errno == "0")
                 {
-                    //登陆成功
                     location.reload()
                 }
                 else
                 {
-                    // 登陆失败
-                    alert(response.errmsg)
+                    alert(resp.errmsg)
                 }
             }
         })
@@ -151,7 +160,7 @@ $(function(){
 
     // TODO 注册按钮点击
     $(".register_form_con").submit(function (e) {
-        // 阻止默认提交操作,表单自带提交功能
+        // 阻止默认提交操作：表单自带提交功能，组织表单的提交
         e.preventDefault()
 
 		// 取到用户输入的内容
@@ -185,24 +194,21 @@ $(function(){
             "smscode": smscode,
             "password": password
         }
-
         $.ajax({
             url: "/passport/register",
             type: "post",
-            contentType: "application/json",
-            headers: {
-                "X-CSRFToken": getCookie("csrf_token")
-            },
             data: JSON.stringify(params),
+            headers:{
+            "X-CSRFToken": getCookie("csrf_token")
+            },
+            contentType: "application/json",
             success: function (response) {
-                if (response.errno == "0")
-                {
+                if (response.errno == "0"){
                     // 注册成功
                     location.reload()
-                }
-                else
-                {
+                }else{
                     // 注册失败
+                    alert(response.errmsg)
                     $("#register-password-err").html(response.errmsg)
                     $("#register-password-err").show()
                 }
@@ -213,18 +219,14 @@ $(function(){
 })
 
 var imageCodeId = ""
-var preImageCodeId = ""
 
 // TODO 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
 function generateImageCode() {
-    // 0、上一个uuid
-    preImageCodeId = imageCodeId
     // 1、生成一个随机的uuid
-    imageCodeId =  generateUUID()
+    imageCodeId = generateUUID()
     // 2、拼接url
-    // var url = "/image_code?imageCodeId=" + imageCodeId
-    var url = "/passport/image_code?imageCodeId=" + imageCodeId + "&preImageCodeId=" + preImageCodeId
-    // 3、替换img标签的src属性
+    var url = "/passport/image_code?imageCodeId=" + imageCodeId
+    // 3、替换标签的src属性
     $(".get_pic_code").attr("src", url)
 }
 
@@ -247,51 +249,50 @@ function sendSMSCode() {
         return;
     }
 
-    var params = {
+        var params = {
         "mobile": mobile,
-        "image_code":imageCode,
+        "image_code": imageCode,
         "image_code_id": imageCodeId
-    }
+    };
     // TODO 发送短信验证码
     $.ajax({
         url: "/passport/sms_code",
         type: "post",
-        contentType: "application/json",
         headers:{
             "X-CSRFToken": getCookie("csrf_token")
         },
+        // 如果没有这个选项，那么后端接收不到你的数据
+        contentType: "application/json",
+        // 将对象转化为json字符串
         data: JSON.stringify(params),
         success: function (response) {
             if (response.errno == "0"){
-                // 发送短信验证码
-                // 涉及倒计时
-                var num = 60
+                // 发送短信验证码成功
+                // 设置倒计时
+                var num = 60;
+                // 设置一个计时器，每1000ms回去运行一次函数中的东西
                 var t = setInterval(function () {
-                    if (num == 1)
-                    {
+                    if (num == 1){
                         // 倒计时结束
-                        // 清空待机时
+                        // 清空计时器
                         clearInterval(t)
                         // 重新设置标签内容
                         $(".get_code").html("点击获取验证码")
                         // 还原点击事件
                         $(".get_code").attr("onclick", "sendSMSCode();");
-                    }
-                    else
-                    {
+                    }else{
                         num -= 1
                         $(".get_code").html(num + "秒")
                     }
                 }, 1000)
-            }
-            else {
+
+            }else{
+                alert(response.errmsg)
                 $("#register-image-code-err").html(response.errmsg)
                 $("#register-image-code-err").show()
                 $(".get_code").attr("onclick", "sendSMSCode();");
-
             }
         }
-
     })
 }
 
@@ -331,8 +332,8 @@ function generateUUID() {
 }
 
 function logout() {
-    $.get("/passport/logout", function (response) {
-        if (response.errno == "0")
+    $.get("/passport/logout", function (resp) {
+        if (resp.errno == "0")
         {
             location.reload()
         }
